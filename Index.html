@@ -1,0 +1,128 @@
+
+<!DOCTYPE html>
+<html lang="sw">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Usajili na Kuingia</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 300px;
+        }
+        h2 {
+            text-align: center;
+        }
+        input[type="text"], input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #5cb85c;
+            border: none;
+            border-radius: 5px;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        button:hover {
+            git-color: #4cae4c;
+        }
+        .toggle {
+            text-align: center;
+            margin-top: 10px;
+        }
+        .data-display {
+            margin-top: 20px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2 id="form-title">Usajili</h2>
+
+    <form id="form" onsubmit="handleSubmit(event)">
+        <input type="text" id="username" placeholder="Jina la Mtumiaji" required>
+        <input type="password" id="password" placeholder="Nenosiri" required>
+        <input type="number" id="mb" placeholder="MB Zinazohitajika" required min="1">
+        <button type="submit">Wasilisha</button>
+    </form>
+
+    <div class="toggle">
+        <span id="toggle-text">Una akaunti? Ingia</span>
+    </div>
+
+    <div class="data-display" id="data-display">
+        <h3>Data Zilizohifadhiwa:</h3>
+        <p id="user-info"></p>
+        <p id="data-status"></p>
+    </div>
+</div>
+
+<script>
+    let isSignUp = true;
+
+    document.getElementById('toggle-text').onclick = function() {
+        isSignUp = !isSignUp;
+        document.getElementById('form-title').innerText = isSignUp ? 'Usajili' : 'Kuingia';
+        document.querySelector('button').innerText = isSignUp ? 'Wasilisha' : 'Ingia';
+        document.getElementById('toggle-text').innerText = isSignUp 
+            ? 'Una akaunti? Ingia' 
+            : 'Huna akaunti? Usajili';
+
+        // Clear the input fields
+        document.getElementById('username').value = '';
+        document.getElementById('password').value = '';
+        document.getElementById('mb').value = '';
+        document.getElementById('data-display').style.display = 'none';
+    };
+
+    function handleSubmit(event) {
+        event.preventDefault();
+        const username = document.getElementById('username').value;
+        const password = document.getElementById('password').value;
+        const mb = document.getElementById('mb').value;
+
+        if (isSignUp) {
+            // Hifadhi data ya mtumiaji kwenye localStorage
+            localStorage.setItem(username, JSON.stringify({ password, mb }));
+            alert(`Usajili umefanikiwa kama: ${username}`);
+            alert('Data ya simu imewashwa na umeunganishwa!');
+        } else {
+            // Ingia mtumiaji
+            const userData = JSON.parse(localStorage.getItem(username));
+            if (userData && userData.password === password) {
+                alert(`Umeingia kwa mafanikio kama: ${username}`);
+                document.getElementById('user-info').innerText = `Jina la Mtumiaji: ${username}, MB: ${userData.mb}`;
+                document.getElementById('data-status').innerText = 'Data ya simu imewashwa na umeunganishwa!';
+                document.getElementById('data-display').style.display = 'block';
+            } else {
+                alert('Jina la mtumiaji au nenosiri si sahihi.');
+            }
+        }
+    }
+</script>
+
+</body>
+</html>
+
